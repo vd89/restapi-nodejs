@@ -20,7 +20,7 @@ const server = http.createServer((req, res) => {
   const queryStringObj = parsedUrl.query;
 
   // Get the HTTP methods
-  const methods = req.method.toLowerCase();
+  const method = req.method.toLowerCase();
 
   // Get the headers as an object
   const headers = req.headers;
@@ -34,15 +34,34 @@ const server = http.createServer((req, res) => {
   req.on('end', () => {
     buffer += decoder.end();
 
-    // Send the response
-    res.end('Server is running \n');
+    // Check the route for a matching path for a handler. If one is not found
+    const chosenHandler = typeof router[trimmedPath] !== 'undefined' ? router[trimmedPath] : handlers.notFound;
 
-    // Log the request/response
-    console.log('Request received with payload:', buffer);
+    // Construct the data object
+    const data = {
+      trimmedPath,
+      queryStringObj,
+      method,
+      headers,
+      payload: buffer,
+    };
+
+    // Route the request to the handler specified in the route
+    chosenHandler(data, (statusCode, payload) => {
+      // Use the status code return from the handler, or set the default status code to 200
+      statusCode = typeof statusCode == 'number' ? statusCode : 200;
+
+      // Use the payload  return from the handler, or set the default payload to on empty object
+      payload = typeof payload == 'object' ? payload : {};
+
+      // Convert payload to a string
+      const payloadString = JSON.stringify(payload);
+
+      res.writeHead(statusCode).end(payloadString);
+      console.log('Returning the response: ', statusCode, payloadString);
+    });
+    console.log('Server data: ', data); // TODO Save to a new file
   });
-
-  // Log the request/response
-  console.log('Request path:', trimmedPath, ',Method:', methods, ',Query: ', queryStringObj, ',Header:', headers);
 });
 
 // Start the server
@@ -53,3 +72,19 @@ server.listen(3000, (err) => {
   }
   console.log('Server is running :>> ', 3000);
 });
+
+// Define Handlers
+
+const handlers = {
+  sample: (data, callBack) => {
+    callBack(406, { name: 'Sample Handler' });
+  },
+  notFound: (data, callback) => {
+    callback(404);
+  },
+};
+
+// Define the request router
+const router = {
+  sample: handlers.sample,
+};
