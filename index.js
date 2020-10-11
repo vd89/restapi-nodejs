@@ -57,6 +57,8 @@ const server = http.createServer((req, res) => {
       // Convert payload to a string
       const payloadString = JSON.stringify(payload);
 
+      // Return the response
+      res.setHeader('Content-Type', 'application/json');
       res.writeHead(statusCode).end(payloadString);
       console.log('Returning the response: ', statusCode, payloadString);
     });
