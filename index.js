@@ -6,6 +6,7 @@ const { triggerAsyncId } = require('async_hooks');
 const http = require('http');
 const { StringDecoder } = require('string_decoder');
 const url = require('url');
+const config = require('./config');
 
 // Config the server to response to all request
 const server = http.createServer((req, res) => {
@@ -68,11 +69,11 @@ const server = http.createServer((req, res) => {
 
 // Start the server
 
-server.listen(3000, (err) => {
+server.listen(config.port, (err) => {
   if (err) {
     console.log(err);
   }
-  console.log('Server is running :>> ', 3000);
+  console.log(`Server on ${config.envName} mode: \n`, `http://localhost:${config.port}`);
 });
 
 // Define Handlers
