@@ -1,0 +1,14 @@
+{
+  "name": "restapi-nodejs",
+  "version": "1.0.0",
+  "description": "Rest API using base Nodejs ",
+  "main": "index.js",
+  "repository": "git@github.com:vd89/restapi-nodejs.git",
+  "author": "dixitvora <dixitvora@gmail.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "start": "node .",
+    "dev": "nodemon ."
+  }
+}
