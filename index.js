@@ -9,11 +9,14 @@ const url = require('url');
 // Config the server to response to all request
 const server = http.createServer((req, res) => {
   // Parse the url
-  const parseUrl = url.parse(req.url, true);
+  const parsedUrl = url.parse(req.url, true);
 
   // Get the path
-  const path = parseUrl.pathname;
+  const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g, '');
+
+  // Get the Query string as an object
+  const queryStringObj = parsedUrl.query;
 
   // Get the HTTP methods
   const methods = req.method.toLowerCase();
@@ -22,7 +25,14 @@ const server = http.createServer((req, res) => {
   res.end('Server is running \n');
 
   // Log the request/response
-  console.log('Request received on path: ', trimmedPath, ' with Method ', methods);
+  console.log(
+    'Request received on path: ',
+    trimmedPath,
+    ' with Method ',
+    methods,
+    ' and Query Sting: ',
+    queryStringObj
+  );
 });
 
 // Start the server
