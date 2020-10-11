@@ -2,14 +2,43 @@
   Primary File for API 
 */
 // Dependencies
-const { triggerAsyncId } = require('async_hooks');
 const http = require('http');
+const https = require('https');
+const { readFileSync } = require('fs');
 const { StringDecoder } = require('string_decoder');
 const url = require('url');
 const config = require('./config');
 
 // Config the server to response to all request
-const server = http.createServer((req, res) => {
+const httpServer = http.createServer((req, res) => {
+  unifiedServer(req, res);
+});
+// Start the server
+httpServer.listen(config.httpPort, (err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(`Server on ${config.envName} mode: \n`, `http://localhost:${config.httpPort}`);
+});
+
+// Https Server
+const httpsServerOptions = {
+  key: readFileSync('./https/key.pem'),
+  cert: readFileSync('./https/cert.pem'),
+};
+const httpsServer = https.createServer(httpsServerOptions, (req, res) => {
+  unifiedServer(req, res);
+});
+// HTTPS server
+httpsServer.listen(config.httpsPort, (err) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(`Server on ${config.envName} mode: \n`, `https://localhost:${config.httpsPort}`);
+});
+
+// Unified Server
+const unifiedServer = (req, res) => {
   // Parse the url
   const parsedUrl = url.parse(req.url, true);
 
@@ -65,19 +94,9 @@ const server = http.createServer((req, res) => {
     });
     console.log('Server data: ', data); // TODO Save to a new file
   });
-});
-
-// Start the server
-
-server.listen(config.port, (err) => {
-  if (err) {
-    console.log(err);
-  }
-  console.log(`Server on ${config.envName} mode: \n`, `http://localhost:${config.port}`);
-});
+};
 
 // Define Handlers
-
 const handlers = {
   sample: (data, callBack) => {
     callBack(406, { name: 'Sample Handler' });
