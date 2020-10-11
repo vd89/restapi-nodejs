@@ -1,1 +1,16 @@
-# restapi-nodejs
+# Rest API - Nodejs
+
+## Technical - stack
+
+- Nodejs
+
+### Requirement ▶️ What are we creating and base requirements
+
+1️⃣ The API listens on a PORT and accepts incoming HTTP requests for POST, GET, PUT, DELETE and HEAD.
+2️⃣ The API allows a client to connect, then create a new user, then edit and delete that user.
+3️⃣ The API allows a user to 'Sign In' which gives them a token that they can use for subsequent authenticated requests.
+4️⃣ The API allows the user to 'Sign Out' which invalidates their token.
+5️⃣ The API allows a signed-in user to use their token to create a new 'check'.
+6️⃣ The API allows a signed-in user to edit or delete any of their checks.
+7️⃣ In the background, workers perform all the 'checks' at the appropriate times, and send alerts to the users when a check changes its state from 'up' to 'down', or visa versa.
+8️⃣ Will send sms to users and use Twilio.
